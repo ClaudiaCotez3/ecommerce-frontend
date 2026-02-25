@@ -1,16 +1,25 @@
-// Shared components placeholder - Ready for Phase 2
-// This directory will contain reusable UI components:
-//
-// ui/           - Base UI components (buttons, inputs, etc.)
-// forms/        - Form components
-// layout/       - Layout components
-// common/       - Common components
-//
-// Example structure:
-// ui/
-// ├── button.tsx
-// ├── input.tsx
-// ├── modal.tsx
-// └── index.ts
+// Shared Components - Centralized exports
+// This module provides access to all reusable components
 
-export {};
+// UI Components
+export { 
+  LoadingSpinner, 
+  LoadingScreen, 
+  LoadingInline 
+} from './ui/loading-spinner';
+
+// Utilities
+export { cn } from '../lib/utils';
+
+// Error handling utilities
+export { 
+  handleApiError, 
+  handleApiErrorWithFallback,
+  extractErrorMessage,
+  getUserFriendlyMessage 
+} from '../utils/handle-api-error';
+
+export type { 
+  ProcessedError, 
+  ApiErrorResponse 
+} from '../utils/handle-api-error';
