@@ -2,7 +2,7 @@ import { cn } from '@/shared/lib/utils';
 
 /**
  * Reusable loading spinner component
- * 
+ *
  * Features:
  * - Multiple sizes
  * - Customizable styling
@@ -23,10 +23,10 @@ const sizeClasses = {
   xl: 'h-12 w-12',
 } as const;
 
-export function LoadingSpinner({ 
-  size = 'md', 
-  className, 
-  label = 'Loading...' 
+export function LoadingSpinner({
+  size = 'md',
+  className,
+  label = 'Loading...',
 }: LoadingSpinnerProps) {
   return (
     <div
@@ -65,9 +65,9 @@ interface LoadingInlineProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function LoadingInline({ 
-  message = 'Loading...', 
-  size = 'sm' 
+export function LoadingInline({
+  message = 'Loading...',
+  size = 'sm',
 }: LoadingInlineProps) {
   return (
     <div className="flex items-center space-x-2">

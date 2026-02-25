@@ -1,8 +1,14 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig,
+} from 'axios';
 
 /**
  * Centralized Axios client configuration
- * 
+ *
  * Features:
  * - Configurable base URL from environment
  * - Automatic timeout handling
@@ -13,15 +19,17 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, In
 // Token management utilities
 const getAuthToken = (): string | null => {
   if (typeof window === 'undefined') return null;
-  
-  return localStorage.getItem('access_token') || 
-         sessionStorage.getItem('access_token') || 
-         null;
+
+  return (
+    localStorage.getItem('access_token') ||
+    sessionStorage.getItem('access_token') ||
+    null
+  );
 };
 
 const removeAuthToken = (): void => {
   if (typeof window === 'undefined') return;
-  
+
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
   sessionStorage.removeItem('access_token');
@@ -29,13 +37,15 @@ const removeAuthToken = (): void => {
 };
 
 // Request interceptor
-const requestInterceptor = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+const requestInterceptor = (
+  config: InternalAxiosRequestConfig
+): InternalAxiosRequestConfig => {
   // Inject authorization token
   const token = getAuthToken();
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  
+
   // Log request in development
   if (process.env.NODE_ENV === 'development') {
     console.log('🚀 API Request:', {
@@ -44,7 +54,7 @@ const requestInterceptor = (config: InternalAxiosRequestConfig): InternalAxiosRe
       data: config.data,
     });
   }
-  
+
   return config;
 };
 
@@ -58,7 +68,7 @@ const responseInterceptor = (response: AxiosResponse): AxiosResponse => {
       data: response.data,
     });
   }
-  
+
   return response;
 };
 
@@ -67,12 +77,12 @@ const responseErrorHandler = (error: AxiosError): Promise<AxiosError> => {
   if (process.env.NODE_ENV === 'development') {
     console.error('❌ Response Error:', error);
   }
-  
+
   // Handle 401 Unauthorized
   if (error.response?.status === 401) {
     // Remove invalid tokens
     removeAuthToken();
-    
+
     // Redirect to login (only in browser)
     if (typeof window !== 'undefined') {
       // Store current path for redirect after login
@@ -80,18 +90,18 @@ const responseErrorHandler = (error: AxiosError): Promise<AxiosError> => {
       if (currentPath !== '/login') {
         localStorage.setItem('redirect_path', currentPath);
       }
-      
+
       // Redirect to login page
       window.location.href = '/login';
     }
   }
-  
+
   return Promise.reject(error);
 };
 
 /**
  * Centralized Axios client configuration
- * 
+ *
  * Features:
  * - Configurable base URL from environment
  * - Automatic timeout handling
@@ -112,32 +122,26 @@ const defaultConfig: ApiClientConfig = {
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000'),
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
 };
 
 // Create Axios instance
 const createApiClient = (config: ApiClientConfig = {}): AxiosInstance => {
   const mergedConfig = { ...defaultConfig, ...config };
-  
+
   const client = axios.create(mergedConfig);
-  
+
   // Setup interceptors directly
-  client.interceptors.request.use(
-    requestInterceptor,
-    (error: AxiosError) => {
-      if (process.env.NODE_ENV === 'development') {
-        console.error('❌ Request Error:', error);
-      }
-      return Promise.reject(error);
+  client.interceptors.request.use(requestInterceptor, (error: AxiosError) => {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ Request Error:', error);
     }
-  );
-  
-  client.interceptors.response.use(
-    responseInterceptor,
-    responseErrorHandler
-  );
-  
+    return Promise.reject(error);
+  });
+
+  client.interceptors.response.use(responseInterceptor, responseErrorHandler);
+
   return client;
 };
 

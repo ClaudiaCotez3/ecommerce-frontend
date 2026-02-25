@@ -8,7 +8,7 @@ import { queryClient } from '@/infrastructure/query/query-client';
 
 /**
  * Global providers for the application
- * 
+ *
  * Features:
  * - TanStack Query provider
  * - Development tools (dev mode only)
@@ -25,7 +25,7 @@ export function Providers({ children }: ProvidersProps) {
       {children}
       {/* React Query DevTools - only in development */}
       {process.env.NODE_ENV === 'development' && (
-        <ReactQueryDevtools 
+        <ReactQueryDevtools
           initialIsOpen={false}
           buttonPosition="bottom-right"
         />

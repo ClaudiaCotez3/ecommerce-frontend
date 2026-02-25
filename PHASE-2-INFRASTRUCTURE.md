@@ -9,18 +9,21 @@ This phase implements professional API communication infrastructure for the mult
 ### 1. Axios Client (`src/infrastructure/api/`)
 
 **axios-client.ts**
+
 - Centralized HTTP client configuration
 - Environment-based URL configuration
 - Consistent headers and timeout settings
 - Interceptors integration
 
 **interceptors.ts**
+
 - Automatic token injection
 - 401 error handling with logout
 - Request/Response logging (dev mode)
 - Centralized error management
 
 **refresh-token.ts**
+
 - Prepared architecture for refresh tokens
 - Request queuing during token refresh
 - Automatic retry of failed requests
@@ -29,6 +32,7 @@ This phase implements professional API communication infrastructure for the mult
 ### 2. TanStack Query (`src/infrastructure/query/`)
 
 **query-client.ts**
+
 - Optimized cache configuration
 - Smart retry strategies
 - Query key factory for consistency
@@ -37,6 +41,7 @@ This phase implements professional API communication infrastructure for the mult
 ### 3. Global State & Providers (`src/app/`)
 
 **providers.tsx**
+
 - QueryClientProvider wrapper
 - Development tools (dev mode only)
 - Ready for additional providers (auth, theme)
@@ -44,6 +49,7 @@ This phase implements professional API communication infrastructure for the mult
 ### 4. Error Handling (`src/shared/utils/`)
 
 **handle-api-error.ts**
+
 - Centralized error processing
 - User-friendly error messages
 - Axios error extraction
@@ -52,6 +58,7 @@ This phase implements professional API communication infrastructure for the mult
 ### 5. UI Components (`src/shared/components/ui/`)
 
 **loading-spinner.tsx**
+
 - Multiple loading components
 - Configurable sizes and styling
 - Accessibility support
@@ -76,12 +83,13 @@ queryKeys = {
   products: ['products'],
   orders: ['orders'],
   // ... structured and consistent
-}
+};
 ```
 
 ## 🚀 Usage Examples
 
 ### API Client
+
 ```typescript
 import { apiClient } from '@/infrastructure';
 
@@ -90,17 +98,19 @@ const response = await apiClient.get('/shops');
 ```
 
 ### TanStack Query
+
 ```typescript
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/infrastructure';
 
 const { data, isLoading, error } = useQuery({
   queryKey: queryKeys.shops,
-  queryFn: () => apiClient.get('/shops')
+  queryFn: () => apiClient.get('/shops'),
 });
 ```
 
 ### Error Handling
+
 ```typescript
 import { handleApiError } from '@/shared/components';
 
@@ -122,6 +132,7 @@ try {
 ## 🎯 Ready for Phase 3
 
 The infrastructure is now ready for:
+
 - Authentication modules
 - Feature-specific API hooks
 - Real-time data synchronization

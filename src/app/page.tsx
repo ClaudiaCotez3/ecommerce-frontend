@@ -13,7 +13,11 @@ const fetchApiHealth = async () => {
 
 export default function HomePage() {
   // Example of using TanStack Query with the infrastructure
-  const { data: healthData, isLoading, error } = useQuery({
+  const {
+    data: healthData,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['health'],
     queryFn: fetchApiHealth,
     retry: false, // Don't retry for demo purposes
@@ -32,7 +36,7 @@ export default function HomePage() {
           ✅ Phase 2 Infrastructure Complete
         </div>
       </div>
-      
+
       {/* API Connection Test */}
       <div className="mt-8 p-6 border border-border rounded-lg bg-card">
         <h3 className="text-lg font-semibold mb-4">API Connection Test</h3>
@@ -61,7 +65,8 @@ export default function HomePage() {
         <div className="p-6 border border-border rounded-lg bg-card">
           <h3 className="font-semibold mb-2">✅ Axios Client</h3>
           <p className="text-sm text-muted-foreground">
-            Centralized HTTP client with automatic token injection and error handling.
+            Centralized HTTP client with automatic token injection and error
+            handling.
           </p>
         </div>
         <div className="p-6 border border-border rounded-lg bg-card">

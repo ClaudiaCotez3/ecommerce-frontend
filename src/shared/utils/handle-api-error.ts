@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 
 /**
  * Centralized API error handling utilities
- * 
+ *
  * Features:
  * - Extract meaningful error messages
  * - Handle different error types
@@ -37,26 +37,26 @@ export const extractErrorMessage = (error: unknown): string => {
       const data = error.response.data as ApiErrorResponse;
       return data.message || data.error || 'Server error occurred';
     }
-    
+
     // Network error
     if (error.request) {
       return 'Network error. Please check your connection.';
     }
-    
+
     // Request setup error
     return error.message || 'Request configuration error';
   }
-  
+
   // Standard Error object
   if (error instanceof Error) {
     return error.message;
   }
-  
+
   // String error
   if (typeof error === 'string') {
     return error;
   }
-  
+
   // Unknown error type
   return 'An unexpected error occurred';
 };
@@ -66,11 +66,11 @@ export const extractErrorMessage = (error: unknown): string => {
  */
 export const handleApiError = (error: unknown): ProcessedError => {
   const message = extractErrorMessage(error);
-  
+
   // Axios error processing
   if (error instanceof AxiosError) {
     const statusCode = error.response?.status || 0;
-    
+
     // Determine error type
     let type: ProcessedError['type'] = 'unknown';
     if (!error.response) {
@@ -80,14 +80,14 @@ export const handleApiError = (error: unknown): ProcessedError => {
     } else if (statusCode >= 500) {
       type = 'server';
     }
-    
+
     const processed: ProcessedError = {
       message,
       statusCode,
       type,
       details: error.response?.data,
     };
-    
+
     // Log in development
     if (process.env.NODE_ENV === 'development') {
       console.error('🚨 API Error:', {
@@ -98,21 +98,21 @@ export const handleApiError = (error: unknown): ProcessedError => {
         details: error.response?.data,
       });
     }
-    
+
     return processed;
   }
-  
+
   // Generic error
   const processed: ProcessedError = {
     message,
     statusCode: 0,
     type: 'unknown',
   };
-  
+
   if (process.env.NODE_ENV === 'development') {
     console.error('🚨 Unknown Error:', error);
   }
-  
+
   return processed;
 };
 
@@ -151,12 +151,12 @@ export const getUserFriendlyMessage = (statusCode: number): string => {
  */
 export const handleApiErrorWithFallback = (error: unknown): ProcessedError => {
   const processed = handleApiError(error);
-  
+
   // Use user-friendly message for known status codes
   if (processed.statusCode > 0) {
     const friendlyMessage = getUserFriendlyMessage(processed.statusCode);
     processed.message = friendlyMessage;
   }
-  
+
   return processed;
 };

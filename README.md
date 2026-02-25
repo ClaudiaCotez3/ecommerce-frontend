@@ -64,6 +64,7 @@ npm run format      # Format code with Prettier
 **Phase 3**: 🚧 Ready for feature modules
 
 ### Phase 2 Features Added
+
 - ✅ Centralized Axios client with interceptors
 - ✅ TanStack Query configuration
 - ✅ Global error handling

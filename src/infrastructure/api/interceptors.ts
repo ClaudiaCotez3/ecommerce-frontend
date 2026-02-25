@@ -1,8 +1,13 @@
-import { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import {
+  AxiosInstance,
+  AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 
 /**
  * Centralized interceptors for Axios client
- * 
+ *
  * Features:
  * - Automatic token injection
  * - 401 handling with logout
@@ -13,16 +18,18 @@ import { AxiosInstance, AxiosError, InternalAxiosRequestConfig, AxiosResponse } 
 // Token management utilities
 const getAuthToken = (): string | null => {
   if (typeof window === 'undefined') return null;
-  
+
   // Try localStorage first, fallback to sessionStorage
-  return localStorage.getItem('access_token') || 
-         sessionStorage.getItem('access_token') || 
-         null;
+  return (
+    localStorage.getItem('access_token') ||
+    sessionStorage.getItem('access_token') ||
+    null
+  );
 };
 
 const removeAuthToken = (): void => {
   if (typeof window === 'undefined') return;
-  
+
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
   sessionStorage.removeItem('access_token');
@@ -30,13 +37,15 @@ const removeAuthToken = (): void => {
 };
 
 // Request interceptor
-const requestInterceptor = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+const requestInterceptor = (
+  config: InternalAxiosRequestConfig
+): InternalAxiosRequestConfig => {
   // Inject authorization token
   const token = getAuthToken();
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  
+
   // Log request in development
   if (process.env.NODE_ENV === 'development') {
     console.log('🚀 API Request:', {
@@ -45,7 +54,7 @@ const requestInterceptor = (config: InternalAxiosRequestConfig): InternalAxiosRe
       data: config.data,
     });
   }
-  
+
   return config;
 };
 
@@ -67,7 +76,7 @@ const responseInterceptor = (response: AxiosResponse): AxiosResponse => {
       data: response.data,
     });
   }
-  
+
   return response;
 };
 
@@ -76,12 +85,12 @@ const responseErrorHandler = (error: AxiosError): Promise<AxiosError> => {
   if (process.env.NODE_ENV === 'development') {
     console.error('❌ Response Error:', error);
   }
-  
+
   // Handle 401 Unauthorized
   if (error.response?.status === 401) {
     // Remove invalid tokens
     removeAuthToken();
-    
+
     // Redirect to login (only in browser)
     if (typeof window !== 'undefined') {
       // Store current path for redirect after login
@@ -89,12 +98,12 @@ const responseErrorHandler = (error: AxiosError): Promise<AxiosError> => {
       if (currentPath !== '/login') {
         localStorage.setItem('redirect_path', currentPath);
       }
-      
+
       // Redirect to login page
       window.location.href = '/login';
     }
   }
-  
+
   return Promise.reject(error);
 };
 
@@ -105,13 +114,13 @@ export const setupInterceptors = (axiosInstance: AxiosInstance): void => {
     requestInterceptor,
     requestErrorHandler
   );
-  
+
   // Response interceptors
   axiosInstance.interceptors.response.use(
     responseInterceptor,
     responseErrorHandler
   );
-  
+
   // TODO: Setup refresh token interceptor when needed
   // setupRefreshTokenInterceptor(axiosInstance);
 };
