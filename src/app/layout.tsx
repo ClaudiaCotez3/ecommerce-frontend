@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 
 import '@/styles/globals.css';
 import { Providers } from './providers';
+import { AuthStatusDemo } from '@/shared/components/ui/auth-status-demo';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div id="root" className="min-h-screen bg-background antialiased">
           <Providers>{children}</Providers>
+          <AuthStatusDemo />
         </div>
       </body>
     </html>
