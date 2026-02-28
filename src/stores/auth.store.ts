@@ -47,18 +47,45 @@ export const useAuthStore = create<AuthStore>()(
           // Debug: Log what we're sending
           console.log('🔍 Login payload:', credentials);
 
-          const response = await apiClient.post<AuthResponse>(
+          const response = await apiClient.post<any>(
             '/auth/login',
             credentials
           );
-          const { user, accessToken } = response.data;
+          
+          console.log('🔍 Raw login response:', response);
+          console.log('🔍 Response data:', response.data);
+          console.log('🔍 Response status:', response.status);
+          
+          // Backend returns { success, message, accessToken, user }
+          const responseData = response.data;
+          
+          if (!responseData.success) {
+            throw new Error(responseData.message || 'Login failed');
+          }
+          
+          const backendUser = responseData.user;
+          const accessToken = responseData.accessToken;
+          
+          // Transform backend user format to frontend format
+          const user: User = {
+            id: backendUser.id,
+            email: backendUser.email,
+            name: `${backendUser.firstName} ${backendUser.lastName}`.trim(),
+            role: 'USER', // Default role
+            permissions: [], // Default permissions
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
 
           console.log('✅ Login response:', {
             user,
-            accessToken: accessToken ? '***' : null,
+            accessToken: accessToken ? `${accessToken.substring(0, 20)}...` : 'NULL',
+            hasToken: !!accessToken,
+            tokenLength: accessToken?.length
           });
 
           // Update store state
+          // Store in state
           set({
             user,
             accessToken,
@@ -66,10 +93,22 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
           });
 
+          // Store in localStorage
+          console.log('🔍 Storing token in localStorage...');
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('access_token', accessToken);
+            console.log('✅ Token stored in localStorage:', accessToken ? `${accessToken.substring(0, 20)}...` : 'NULL');
+            
+            // Verify it was stored
+            const storedToken = localStorage.getItem('access_token');
+            console.log('🔍 Verification - Token retrieved from localStorage:', storedToken ? `${storedToken.substring(0, 20)}...` : 'NULL');
+          }
+
           // Update axios default header for future requests
           if (apiClient.defaults.headers.common) {
             apiClient.defaults.headers.common['Authorization'] =
               `Bearer ${accessToken}`;
+            console.log('✅ Updated Axios default headers');
           }
         } catch (error) {
           console.error('❌ Login error:', error);
@@ -176,17 +215,22 @@ export const useAuthStore = create<AuthStore>()(
       // Initialize authentication on app start
       initializeAuth: async () => {
         const { accessToken } = get();
+        console.log('🔍 Auth Store: Initializing auth, token exists:', !!accessToken);
 
         if (!accessToken) {
+          console.log('❌ Auth Store: No token found, setting loading to false');
+          set({ isLoading: false });
           return;
         }
 
         try {
           set({ isLoading: true });
+          console.log('🔍 Auth Store: Verifying token with /auth/me');
 
           // Verify token by fetching user profile
           const response = await apiClient.get<{ user: User }>('/auth/me');
           const { user } = response.data;
+          console.log('✅ Auth Store: Token valid, user:', user.email);
 
           set({
             user,
@@ -200,6 +244,7 @@ export const useAuthStore = create<AuthStore>()(
               `Bearer ${accessToken}`;
           }
         } catch (error) {
+          console.error('❌ Auth Store: Token invalid, clearing auth state:', error);
           // Token is invalid, clear auth state
           set({
             user: null,
@@ -224,9 +269,19 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user,
       }),
       onRehydrateStorage: () => (state) => {
+        console.log('🔍 [ZUSTAND] Rehydrating auth state:', state);
         // Set isAuthenticated based on persisted data
         if (state?.accessToken && state?.user) {
           state.isAuthenticated = true;
+          console.log('✅ [ZUSTAND] User rehydrated as authenticated');
+          
+          // Also store in simple localStorage for interceptors
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('access_token', state.accessToken);
+            console.log('✅ [ZUSTAND] Token also stored in simple localStorage');
+          }
+        } else {
+          console.log('❌ [ZUSTAND] No valid auth data to rehydrate');
         }
       },
     }

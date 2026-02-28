@@ -42,8 +42,15 @@ const requestInterceptor = (
 ): InternalAxiosRequestConfig => {
   // Inject authorization token
   const token = getAuthToken();
+  
+  console.log('🔍 [INTERCEPTOR] Getting token from storage...');
+  console.log('🔍 [INTERCEPTOR] Token found:', token ? `${token.substring(0, 20)}...` : 'NULL');
+  
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('✅ [INTERCEPTOR] Token injected in headers');
+  } else {
+    console.log('❌ [INTERCEPTOR] No token to inject or missing headers');
   }
 
   // Log request in development

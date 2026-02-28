@@ -18,8 +18,9 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = 'text', error, label, id, ...props }, ref) => {
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+  ({ className, type = 'text', error, label, id, name, ...props }, ref) => {
+    // Use provided id, or generate stable one from name, or fallback
+    const inputId = id || (name ? `input-${name}` : 'input-default');
     
     return (
       <div className="space-y-2">
@@ -33,6 +34,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <input
           id={inputId}
+          name={name}
           type={type}
           className={cn(
             'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',

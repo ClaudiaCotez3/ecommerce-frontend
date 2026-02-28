@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useAuthStore } from '@/stores/auth.store';
 import { Button } from '@/shared/components/ui/button';
+import { ShopSelector } from '@/modules/shops/components/shop-selector';
 
 /**
  * Professional Navbar Component for SaaS Dashboard
@@ -66,14 +67,8 @@ export function Navbar({ onToggleSidebar, isCollapsed = false }: NavbarProps) {
             </svg>
           </Button>
 
-          {/* Shop Selector (Placeholder) */}
-          <div className="hidden md:flex items-center space-x-2">
-            <span className="text-sm text-muted-foreground">Shop:</span>
-            <select className="text-sm bg-background border border-border rounded px-2 py-1">
-              <option>My Store (Demo)</option>
-              <option>+ Create New Shop</option>
-            </select>
-          </div>
+          {/* Shop Selector - Real */}
+          <ShopSelector className="hidden md:flex" />
         </div>
 
         {/* Right side - User Menu */}

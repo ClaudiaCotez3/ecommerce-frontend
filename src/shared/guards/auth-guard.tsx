@@ -28,18 +28,26 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
 
   useEffect(() => {
     // Initialize auth on mount
+    console.log('🔍 AuthGuard: Initializing auth...');
     initializeAuth();
   }, [initializeAuth]);
 
   useEffect(() => {
+    console.log('🔍 AuthGuard: Auth state changed:', { isAuthenticated, isLoading, pathname });
+    
     // Redirect to login if not authenticated and not loading
     if (!isLoading && !isAuthenticated) {
+      console.log('❌ AuthGuard: Not authenticated, redirecting to login');
+      
       // Store current path for redirect after login
       if (pathname && pathname !== '/login') {
+        console.log('💾 AuthGuard: Storing redirect path:', pathname);
         localStorage.setItem('redirect_path', pathname);
       }
       
       router.replace('/login' as any);
+    } else if (!isLoading && isAuthenticated) {
+      console.log('✅ AuthGuard: Authenticated, allowing access');
     }
   }, [isAuthenticated, isLoading, router, pathname]);
 

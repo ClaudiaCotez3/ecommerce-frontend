@@ -39,25 +39,46 @@ export default function LoginPage() {
 
   // Redirect if already authenticated
   useEffect(() => {
+    console.log('🔍 LoginPage: Auth state changed:', { isAuthenticated, isLoading });
+    
     if (isAuthenticated) {
+      console.log('✅ LoginPage: Already authenticated, redirecting to dashboard');
       router.replace('/dashboard' as any);
     }
   }, [isAuthenticated, router]);
 
   const onSubmit = async (data: LoginFormData) => {
     try {
+      console.log('🔍 LoginPage: Attempting login with:', data.email);
+      console.log('🔍 LoginPage: Current localStorage before login:', {
+        accessToken: localStorage.getItem('access_token'),
+        authStorage: localStorage.getItem('auth-storage')
+      });
+      
       await login(data);
+      
+      console.log('✅ LoginPage: Login successful, checking state...');
+      console.log('🔍 LoginPage: Current localStorage after login:', {
+        accessToken: localStorage.getItem('access_token'),
+        authStorage: localStorage.getItem('auth-storage')
+      });
+      console.log('🔍 LoginPage: Auth state after login:', { isAuthenticated });
       
       // Check for redirect path
       const redirectPath = localStorage.getItem('redirect_path');
+      console.log('🔍 LoginPage: Redirect path:', redirectPath);
+      
       if (redirectPath) {
         localStorage.removeItem('redirect_path');
+        console.log('➡️ LoginPage: Redirecting to stored path:', redirectPath);
         router.replace(redirectPath as any);
       } else {
+        console.log('➡️ LoginPage: Redirecting to dashboard');
         router.replace('/dashboard' as any);
       }
       
     } catch (error) {
+      console.error('❌ LoginPage: Login failed:', error);
       const processedError = handleApiError(error);
       
       // Set form-level error
