@@ -15,7 +15,7 @@ import { LoadingInline } from '@/shared/components/ui/loading-spinner';
 
 /**
  * Login page with professional form handling
- * 
+ *
  * Features:
  * - React Hook Form with Zod validation
  * - Integration with auth store
@@ -27,7 +27,7 @@ import { LoadingInline } from '@/shared/components/ui/loading-spinner';
 export default function LoginPage() {
   const router = useRouter();
   const { login, isAuthenticated, isLoading } = useAuthStore();
-  
+
   const {
     register,
     handleSubmit,
@@ -39,10 +39,15 @@ export default function LoginPage() {
 
   // Redirect if already authenticated
   useEffect(() => {
-    console.log('🔍 LoginPage: Auth state changed:', { isAuthenticated, isLoading });
-    
+    console.log('🔍 LoginPage: Auth state changed:', {
+      isAuthenticated,
+      isLoading,
+    });
+
     if (isAuthenticated) {
-      console.log('✅ LoginPage: Already authenticated, redirecting to dashboard');
+      console.log(
+        '✅ LoginPage: Already authenticated, redirecting to dashboard'
+      );
       router.replace('/dashboard' as any);
     }
   }, [isAuthenticated, router]);
@@ -52,22 +57,22 @@ export default function LoginPage() {
       console.log('🔍 LoginPage: Attempting login with:', data.email);
       console.log('🔍 LoginPage: Current localStorage before login:', {
         accessToken: localStorage.getItem('access_token'),
-        authStorage: localStorage.getItem('auth-storage')
+        authStorage: localStorage.getItem('auth-storage'),
       });
-      
+
       await login(data);
-      
+
       console.log('✅ LoginPage: Login successful, checking state...');
       console.log('🔍 LoginPage: Current localStorage after login:', {
         accessToken: localStorage.getItem('access_token'),
-        authStorage: localStorage.getItem('auth-storage')
+        authStorage: localStorage.getItem('auth-storage'),
       });
       console.log('🔍 LoginPage: Auth state after login:', { isAuthenticated });
-      
+
       // Check for redirect path
       const redirectPath = localStorage.getItem('redirect_path');
       console.log('🔍 LoginPage: Redirect path:', redirectPath);
-      
+
       if (redirectPath) {
         localStorage.removeItem('redirect_path');
         console.log('➡️ LoginPage: Redirecting to stored path:', redirectPath);
@@ -76,11 +81,10 @@ export default function LoginPage() {
         console.log('➡️ LoginPage: Redirecting to dashboard');
         router.replace('/dashboard' as any);
       }
-      
     } catch (error) {
       console.error('❌ LoginPage: Login failed:', error);
       const processedError = handleApiError(error);
-      
+
       // Set form-level error
       setError('root', {
         message: processedError.message,
@@ -148,7 +152,7 @@ export default function LoginPage() {
         <p className="text-sm text-muted-foreground">
           Don't have an account?{' '}
           <Link
-            href={"/register" as any}
+            href={'/register' as any}
             className="font-medium text-primary hover:underline"
           >
             Sign up

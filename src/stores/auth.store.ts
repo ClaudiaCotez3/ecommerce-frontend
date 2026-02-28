@@ -51,21 +51,21 @@ export const useAuthStore = create<AuthStore>()(
             '/auth/login',
             credentials
           );
-          
+
           console.log('🔍 Raw login response:', response);
           console.log('🔍 Response data:', response.data);
           console.log('🔍 Response status:', response.status);
-          
+
           // Backend returns { success, message, accessToken, user }
           const responseData = response.data;
-          
+
           if (!responseData.success) {
             throw new Error(responseData.message || 'Login failed');
           }
-          
+
           const backendUser = responseData.user;
           const accessToken = responseData.accessToken;
-          
+
           // Transform backend user format to frontend format
           const user: User = {
             id: backendUser.id,
@@ -79,9 +79,11 @@ export const useAuthStore = create<AuthStore>()(
 
           console.log('✅ Login response:', {
             user,
-            accessToken: accessToken ? `${accessToken.substring(0, 20)}...` : 'NULL',
+            accessToken: accessToken
+              ? `${accessToken.substring(0, 20)}...`
+              : 'NULL',
             hasToken: !!accessToken,
-            tokenLength: accessToken?.length
+            tokenLength: accessToken?.length,
           });
 
           // Update store state
@@ -97,11 +99,17 @@ export const useAuthStore = create<AuthStore>()(
           console.log('🔍 Storing token in localStorage...');
           if (typeof window !== 'undefined') {
             localStorage.setItem('access_token', accessToken);
-            console.log('✅ Token stored in localStorage:', accessToken ? `${accessToken.substring(0, 20)}...` : 'NULL');
-            
+            console.log(
+              '✅ Token stored in localStorage:',
+              accessToken ? `${accessToken.substring(0, 20)}...` : 'NULL'
+            );
+
             // Verify it was stored
             const storedToken = localStorage.getItem('access_token');
-            console.log('🔍 Verification - Token retrieved from localStorage:', storedToken ? `${storedToken.substring(0, 20)}...` : 'NULL');
+            console.log(
+              '🔍 Verification - Token retrieved from localStorage:',
+              storedToken ? `${storedToken.substring(0, 20)}...` : 'NULL'
+            );
           }
 
           // Update axios default header for future requests
@@ -215,10 +223,15 @@ export const useAuthStore = create<AuthStore>()(
       // Initialize authentication on app start
       initializeAuth: async () => {
         const { accessToken } = get();
-        console.log('🔍 Auth Store: Initializing auth, token exists:', !!accessToken);
+        console.log(
+          '🔍 Auth Store: Initializing auth, token exists:',
+          !!accessToken
+        );
 
         if (!accessToken) {
-          console.log('❌ Auth Store: No token found, setting loading to false');
+          console.log(
+            '❌ Auth Store: No token found, setting loading to false'
+          );
           set({ isLoading: false });
           return;
         }
@@ -244,7 +257,10 @@ export const useAuthStore = create<AuthStore>()(
               `Bearer ${accessToken}`;
           }
         } catch (error) {
-          console.error('❌ Auth Store: Token invalid, clearing auth state:', error);
+          console.error(
+            '❌ Auth Store: Token invalid, clearing auth state:',
+            error
+          );
           // Token is invalid, clear auth state
           set({
             user: null,
@@ -274,11 +290,13 @@ export const useAuthStore = create<AuthStore>()(
         if (state?.accessToken && state?.user) {
           state.isAuthenticated = true;
           console.log('✅ [ZUSTAND] User rehydrated as authenticated');
-          
+
           // Also store in simple localStorage for interceptors
           if (typeof window !== 'undefined') {
             localStorage.setItem('access_token', state.accessToken);
-            console.log('✅ [ZUSTAND] Token also stored in simple localStorage');
+            console.log(
+              '✅ [ZUSTAND] Token also stored in simple localStorage'
+            );
           }
         } else {
           console.log('❌ [ZUSTAND] No valid auth data to rehydrate');

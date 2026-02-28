@@ -22,22 +22,22 @@ export const useCreateShop = (options?: UseCreateShopOptions) => {
 
   return useMutation({
     mutationFn: (shopData: CreateShopRequest) => createShop(shopData),
-    
+
     onSuccess: (shop) => {
       // Invalidar la query de mis shops para refrescar la lista
       queryClient.invalidateQueries({
         queryKey: SHOPS_QUERY_KEYS.my,
       });
-      
+
       // Callback personalizado
       options?.onSuccess?.(shop);
     },
-    
+
     onError: (error) => {
       // Manejar error con utilidad centralizada
       const processedError = handleApiError(error);
       console.error('Error creating shop:', processedError);
-      
+
       // Callback personalizado
       options?.onError?.(processedError);
     },

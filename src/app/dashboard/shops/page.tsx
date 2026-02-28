@@ -28,7 +28,9 @@ export default function ShopsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">My Shops</h1>
-            <p className="text-muted-foreground">Manage your shops and stores</p>
+            <p className="text-muted-foreground">
+              Manage your shops and stores
+            </p>
           </div>
         </div>
         <div className="animate-pulse space-y-4">
@@ -46,7 +48,9 @@ export default function ShopsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">My Shops</h1>
-            <p className="text-muted-foreground">Manage your shops and stores</p>
+            <p className="text-muted-foreground">
+              Manage your shops and stores
+            </p>
           </div>
         </div>
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
@@ -61,9 +65,7 @@ export default function ShopsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">My Shops</h1>
-          <p className="text-muted-foreground">
-            Manage your shops and stores
-          </p>
+          <p className="text-muted-foreground">Manage your shops and stores</p>
         </div>
         <button
           onClick={() => setIsCreateDialogOpen(true)}
@@ -78,7 +80,9 @@ export default function ShopsPage() {
         <div className="bg-card border border-border rounded-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Total Shops</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Shops
+              </p>
               <p className="text-2xl font-bold">{shops.length}</p>
             </div>
             <div className="text-blue-600">🏪</div>
@@ -88,8 +92,12 @@ export default function ShopsPage() {
         <div className="bg-card border border-border rounded-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Active Shop</p>
-              <p className="text-lg font-medium">{activeShop?.name || 'None'}</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Active Shop
+              </p>
+              <p className="text-lg font-medium">
+                {activeShop?.name || 'None'}
+              </p>
             </div>
             <div className="text-green-600">✅</div>
           </div>
@@ -98,7 +106,9 @@ export default function ShopsPage() {
         <div className="bg-card border border-border rounded-lg p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Status</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Status
+              </p>
               <p className="text-lg font-medium">Active</p>
             </div>
             <div className="text-purple-600">🚀</div>
@@ -140,16 +150,18 @@ export default function ShopsPage() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-lg">{shop.name}</h3>
                   {activeShop?.id === shop.id && (
-                    <span className="text-primary text-sm font-medium">Active</span>
+                    <span className="text-primary text-sm font-medium">
+                      Active
+                    </span>
                   )}
                 </div>
-                
+
                 {shop.description && (
                   <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
                     {shop.description}
                   </p>
                 )}
-                
+
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>Currency: {shop.currency}</span>
                   <span>{shop.status}</span>

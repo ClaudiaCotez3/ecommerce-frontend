@@ -8,7 +8,7 @@ import { LoadingScreen } from '@/shared/components/ui/loading-spinner';
 
 /**
  * Authentication guard component
- * 
+ *
  * Features:
  * - Protects routes from unauthenticated access
  * - Automatic redirects
@@ -33,18 +33,22 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
   }, [initializeAuth]);
 
   useEffect(() => {
-    console.log('🔍 AuthGuard: Auth state changed:', { isAuthenticated, isLoading, pathname });
-    
+    console.log('🔍 AuthGuard: Auth state changed:', {
+      isAuthenticated,
+      isLoading,
+      pathname,
+    });
+
     // Redirect to login if not authenticated and not loading
     if (!isLoading && !isAuthenticated) {
       console.log('❌ AuthGuard: Not authenticated, redirecting to login');
-      
+
       // Store current path for redirect after login
       if (pathname && pathname !== '/login') {
         console.log('💾 AuthGuard: Storing redirect path:', pathname);
         localStorage.setItem('redirect_path', pathname);
       }
-      
+
       router.replace('/login' as any);
     } else if (!isLoading && isAuthenticated) {
       console.log('✅ AuthGuard: Authenticated, allowing access');
@@ -74,7 +78,10 @@ interface PublicGuardProps {
   redirectTo?: string;
 }
 
-export function PublicGuard({ children, redirectTo = '/dashboard' }: PublicGuardProps) {
+export function PublicGuard({
+  children,
+  redirectTo = '/dashboard',
+}: PublicGuardProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading, initializeAuth } = useAuthStore();
 

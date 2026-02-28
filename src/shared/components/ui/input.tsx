@@ -4,7 +4,7 @@ import { cn } from '@/shared/lib/utils';
 
 /**
  * Reusable input component
- * 
+ *
  * Features:
  * - Consistent styling
  * - Error state support
@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, type = 'text', error, label, id, name, ...props }, ref) => {
     // Use provided id, or generate stable one from name, or fallback
     const inputId = id || (name ? `input-${name}` : 'input-default');
-    
+
     return (
       <div className="space-y-2">
         {label && (

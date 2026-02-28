@@ -4,11 +4,11 @@
  */
 
 import { apiClient } from '@/infrastructure/api/axios-client';
-import type { 
-  Shop, 
-  CreateShopRequest, 
-  ShopsApiResponse, 
-  ShopApiResponse 
+import type {
+  Shop,
+  CreateShopRequest,
+  ShopsApiResponse,
+  ShopApiResponse,
 } from '../types';
 
 /**
@@ -22,7 +22,9 @@ export const getMyShops = async (): Promise<Shop[]> => {
 /**
  * Crea una nueva shop
  */
-export const createShop = async (shopData: CreateShopRequest): Promise<Shop> => {
+export const createShop = async (
+  shopData: CreateShopRequest
+): Promise<Shop> => {
   const response = await apiClient.post<ShopApiResponse>('/shops', shopData);
   return response.data.data;
 };

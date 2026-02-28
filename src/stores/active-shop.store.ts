@@ -11,7 +11,7 @@ interface ActiveShopState {
   // Estado
   activeShopId: number | null;
   activeShop: Shop | null;
-  
+
   // Acciones
   setActiveShop: (shop: Shop) => void;
   setActiveShopById: (shopId: number, shops: Shop[]) => void;
@@ -36,7 +36,7 @@ export const useActiveShopStore = create<ActiveShopState>()(
 
       // Setear shop activa por ID (busca en la lista)
       setActiveShopById: (shopId, shops) => {
-        const shop = shops.find(s => s.id === shopId);
+        const shop = shops.find((s) => s.id === shopId);
         if (shop) {
           set({
             activeShopId: shopId,
@@ -56,7 +56,7 @@ export const useActiveShopStore = create<ActiveShopState>()(
       // Inicializar shop activa automáticamente
       initializeActiveShop: (shops) => {
         const currentActiveShopId = get().activeShopId;
-        
+
         if (shops.length === 0) {
           // No hay shops, limpiar
           set({
@@ -67,8 +67,10 @@ export const useActiveShopStore = create<ActiveShopState>()(
         }
 
         // Si no hay shop activa o la actual no existe en la lista
-        const currentShopExists = shops.some(shop => shop.id === currentActiveShopId);
-        
+        const currentShopExists = shops.some(
+          (shop) => shop.id === currentActiveShopId
+        );
+
         if (!currentActiveShopId || !currentShopExists) {
           // Setear la primera shop como activa
           const firstShop = shops[0];
@@ -78,7 +80,9 @@ export const useActiveShopStore = create<ActiveShopState>()(
           });
         } else {
           // Actualizar el objeto completo de la shop activa
-          const activeShop = shops.find(shop => shop.id === currentActiveShopId);
+          const activeShop = shops.find(
+            (shop) => shop.id === currentActiveShopId
+          );
           if (activeShop) {
             set({
               activeShop,

@@ -15,10 +15,12 @@ interface UseRequireActiveShopOptions {
   allowEmpty?: boolean;
 }
 
-export const useRequireActiveShop = (options: UseRequireActiveShopOptions = {}) => {
+export const useRequireActiveShop = (
+  options: UseRequireActiveShopOptions = {}
+) => {
   const { redirectTo = '/dashboard/shops', allowEmpty = false } = options;
   const router = useRouter();
-  
+
   const { data: shops = [], isLoading } = useMyShops();
   const { activeShop, initializeActiveShop } = useActiveShopStore();
 

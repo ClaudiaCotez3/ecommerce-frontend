@@ -10,7 +10,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCreateShop } from '../hooks/use-create-shop';
 import { useActiveShopStore } from '@/stores/active-shop.store';
-import { createShopSchema, type CreateShopFormData } from '../schemas/shop.schemas';
+import {
+  createShopSchema,
+  type CreateShopFormData,
+} from '../schemas/shop.schemas';
 import { Button } from '@/shared/components/ui/button';
 
 interface CreateShopDialogProps {
@@ -19,10 +22,14 @@ interface CreateShopDialogProps {
   onSuccess?: () => void;
 }
 
-export function CreateShopDialog({ isOpen, onClose, onSuccess }: CreateShopDialogProps) {
+export function CreateShopDialog({
+  isOpen,
+  onClose,
+  onSuccess,
+}: CreateShopDialogProps) {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { setActiveShop } = useActiveShopStore();
-  
+
   const {
     register,
     handleSubmit,
@@ -41,7 +48,7 @@ export function CreateShopDialog({ isOpen, onClose, onSuccess }: CreateShopDialo
     onSuccess: (shop) => {
       // Setear la nueva shop como activa
       setActiveShop(shop);
-      
+
       // Limpiar formulario y cerrar
       reset();
       setErrorMessage('');
@@ -70,11 +77,8 @@ export function CreateShopDialog({ isOpen, onClose, onSuccess }: CreateShopDialo
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50" 
-        onClick={handleClose}
-      />
-      
+      <div className="absolute inset-0 bg-black/50" onClick={handleClose} />
+
       {/* Dialog */}
       <div className="relative bg-background border border-border rounded-lg shadow-lg w-full max-w-md mx-4">
         <div className="p-6">
@@ -113,13 +117,18 @@ export function CreateShopDialog({ isOpen, onClose, onSuccess }: CreateShopDialo
                 disabled={isSubmitting}
               />
               {errors.name && (
-                <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.name.message}
+                </p>
               )}
             </div>
 
             {/* Description */}
             <div>
-              <label htmlFor="description" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium mb-1"
+              >
                 Description
               </label>
               <textarea
@@ -131,13 +140,18 @@ export function CreateShopDialog({ isOpen, onClose, onSuccess }: CreateShopDialo
                 disabled={isSubmitting}
               />
               {errors.description && (
-                <p className="text-red-600 text-sm mt-1">{errors.description.message}</p>
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.description.message}
+                </p>
               )}
             </div>
 
             {/* Currency */}
             <div>
-              <label htmlFor="currency" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="currency"
+                className="block text-sm font-medium mb-1"
+              >
                 Currency *
               </label>
               <select
@@ -153,7 +167,9 @@ export function CreateShopDialog({ isOpen, onClose, onSuccess }: CreateShopDialo
                 <option value="CAD">CAD - Canadian Dollar</option>
               </select>
               {errors.currency && (
-                <p className="text-red-600 text-sm mt-1">{errors.currency.message}</p>
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.currency.message}
+                </p>
               )}
             </div>
 
